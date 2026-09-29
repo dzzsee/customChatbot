@@ -116,7 +116,11 @@ export function Drawer({ open, onClose, children }: Props) {
     <>
       <motion.div
         className="fixed inset-0 z-30"
-        style={{ opacity: scrimOpacity, background: 'var(--mat-veil)' }}
+        style={{
+          opacity: scrimOpacity,
+          background: 'var(--mat-veil)',
+          pointerEvents: open ? 'auto' : 'none',
+        }}
         onClick={onClose}
         aria-hidden="true"
       />
