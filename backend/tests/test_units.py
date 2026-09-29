@@ -67,7 +67,7 @@ class TestModelRouter:
     def test_default_text_model(self, settings) -> None:
         spec = ModelRouter(settings).text()
         assert spec.model == settings.model_text_default
-        assert spec.thinking is True
+        assert spec.thinking is (spec.model != settings.model_text_fast)
 
     def test_override_model_disables_thinking_when_requested(self, settings) -> None:
         spec = ModelRouter(settings).text(settings.model_text_fast, reasoning=False)

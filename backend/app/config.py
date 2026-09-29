@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     nvidia_asr_path: str = "/audio/transcriptions"
     nvidia_tts_path: str = "/audio/speech"
 
-    model_text_default: str = "nvidia/nemotron-3-super-120b-a12b"
+    model_text_default: str = "nvidia/nemotron-3.5-lightning-30b-a3b"
     model_text_premium: str = "nvidia/nemotron-3-ultra-550b-a55b"
     model_text_fast: str = "nvidia/nemotron-3.5-lightning-30b-a3b"
     model_omni: str = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"

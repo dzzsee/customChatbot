@@ -26,7 +26,11 @@ class ModelRouter:
 
     def text(self, override: str | None = None, *, reasoning: bool | None = None) -> TaskSpec:
         model = override or self.settings.model_text_default
-        thinking = reasoning if reasoning is not None else True
+        thinking = (
+            reasoning
+            if reasoning is not None
+            else model != self.settings.model_text_fast
+        )
         return TaskSpec(
             model=model,
             thinking=thinking,
@@ -92,9 +96,9 @@ class ModelRouter:
         return [
             ModelInfo(
                 id=self.settings.model_text_default,
-                label="Nemotron 3 Super 120B",
+                label="Nemotron 3.5 Lightning 30B",
                 role="text",
-                description="Equilibrio entre calidad, latencia y coste. Contexto de 1M tokens.",
+                description="Respuesta rapida y economica para el uso diario.",
             ),
             ModelInfo(
                 id=self.settings.model_text_premium,
@@ -103,10 +107,12 @@ class ModelRouter:
                 description="Razonamiento de maxima calidad. Mas lento y mas caro.",
             ),
             ModelInfo(
-                id=self.settings.model_text_fast,
-                label="Nemotron 3.5 Lightning 30B",
+                id=self.settings.model_text_default
+                if self.settings.model_text_default != self.settings.model_text_fast
+                else "nvidia/nemotron-3-super-120b-a12b",
+                label="Nemotron 3 Super 120B",
                 role="text",
-                description="Respuestas rapidas y economicas. Ideal para RAG.",
+                description="Equilibrio entre calidad y razonamiento.",
             ),
             ModelInfo(
                 id=self.settings.model_omni,
