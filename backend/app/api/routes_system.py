@@ -63,8 +63,20 @@ async def health(request: Request) -> HealthResponse:
         ok, detail = await ctx.client.probe(model)
         return ProbeResult(model=model, role=role, ok=ok, detail=detail)
 
-    results = await asyncio.gather(*(probe(role, attr) for role, attr in PROBE_TARGETS))
-    healthy = all(item.ok for item in results if item.role in {"text", "omni"})
+    if settings.probe_models_on_health:
+        results = await asyncio.gather(*(probe(role, attr) for role, attr in PROBE_TARGETS))
+        healthy = all(item.ok for item in results if item.role in {"text", "omni"})
+    else:
+        results = [
+            ProbeResult(
+                model=getattr(settings, attr),
+                role=role,
+                ok=True,
+                detail="probe profundo desactivado",
+            )
+            for role, attr in PROBE_TARGETS
+        ]
+        healthy = True
 
     return HealthResponse(
         status="ok" if healthy else "degradado",

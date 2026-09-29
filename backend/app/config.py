@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     safety_fail_open: bool = True
     enable_tts: bool = True
     enable_rag: bool = True
+    probe_models_on_health: bool = False
     rag_chunk_size: int = 800
     rag_chunk_overlap: int = 100
     rag_top_k: int = 5
