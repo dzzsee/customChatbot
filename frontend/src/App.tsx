@@ -33,7 +33,7 @@ export default function App() {
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Barra de vidrio flotante: no toca los bordes, la conversacion pasa por debajo. */}
         <div className="chrome z-20 shrink-0 px-3 pt-3 sm:px-5 sm:pt-4">
-          <header className="glass mx-auto flex max-w-4xl items-center gap-2.5 rounded-2xl px-3 py-2.5 sm:gap-3 sm:px-4">
+          <header className="mobile-header glass mx-auto flex max-w-4xl items-center gap-2.5 rounded-2xl px-3 py-2.5 sm:gap-3 sm:px-4">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}

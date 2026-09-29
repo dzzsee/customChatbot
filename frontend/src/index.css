@@ -331,6 +331,55 @@ body {
   margin: 1.3rem 0;
 }
 
+@media (max-width: 640px) {
+  .mobile-header {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+
+  .prose-nemotron table,
+  .prose-nemotron pre {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .prose-nemotron table {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .prose-nemotron pre {
+    padding: 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .prose-nemotron .katex-display {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.3rem 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .mobile-header {
+    gap: 0.35rem;
+    padding-inline: 0.55rem;
+  }
+
+  .mobile-header > :nth-child(2) {
+    min-width: 0;
+  }
+
+  .mobile-header select {
+    max-width: 8.5rem;
+  }
+
+  .prose-nemotron {
+    font-size: 0.9rem;
+  }
+}
+
 /* --- Cursor de streaming --------------------------------------------------- */
 
 @keyframes blink {
