@@ -15,6 +15,10 @@ jobs:
       pages: write
       id-token: write
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     strategy:
       matrix:
         node-version: [22]
@@ -39,7 +43,7 @@ jobs:
           VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'https://customchatbot-api.onrender.com' }}
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
         with:
           enablement: true
 
