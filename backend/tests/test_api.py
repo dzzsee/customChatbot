@@ -6,6 +6,8 @@ import zipfile
 
 import pytest
 
+from app.config import get_settings
+
 
 class TestHealthAndModels:
     def test_health_reports_ffmpeg(self, client) -> None:
@@ -16,10 +18,10 @@ class TestHealthAndModels:
         assert body["base_url"].startswith("https://")
         assert "max_video_seconds" in body["limits"]
 
-    def test_models_exposes_three_text_models(self, client) -> None:
+    def test_models_exposes_text_models(self, client) -> None:
         body = client.get("/api/models").json()
-        assert body["default"] == "nvidia/nemotron-3-super-120b-a12b"
-        assert [m["role"] for m in body["models"]] == ["text", "text", "text", "omni"]
+        assert body["default"] == get_settings().model_text_default
+        assert [m["role"] for m in body["models"]] == ["text", "text", "text", "text", "omni"]
 
     def test_openapi_documents_every_route(self, client) -> None:
         paths = client.get("/openapi.json").json()["paths"]

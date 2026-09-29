@@ -59,7 +59,7 @@ class TestChunkText:
     def test_ui_lists_text_models_plus_omni(self, settings) -> None:
         infos = ModelRouter(settings).for_ui()
         roles = [info.role for info in infos]
-        assert roles.count("text") == 3
+        assert roles.count("text") == 4
         assert roles[-1] == "omni"
 
 

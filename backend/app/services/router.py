@@ -96,9 +96,9 @@ class ModelRouter:
         return [
             ModelInfo(
                 id=self.settings.model_text_default,
-                label="Nemotron 3.5 Lightning 30B",
+                label="DeepSeek V4.1 Flash",
                 role="text",
-                description="Respuesta rapida y economica para el uso diario.",
+                description="Respuesta muy rapida para preguntas cortas y tareas diarias.",
             ),
             ModelInfo(
                 id=self.settings.model_text_premium,
@@ -107,9 +107,13 @@ class ModelRouter:
                 description="Razonamiento de maxima calidad. Mas lento y mas caro.",
             ),
             ModelInfo(
-                id=self.settings.model_text_default
-                if self.settings.model_text_default != self.settings.model_text_fast
-                else "nvidia/nemotron-3-super-120b-a12b",
+                id=self.settings.model_text_lightning,
+                label="Nemotron 3.5 Lightning 30B",
+                role="text",
+                description="Respuesta rapida y economica. Ideal para RAG.",
+            ),
+            ModelInfo(
+                id="nvidia/nemotron-3-super-120b-a12b",
                 label="Nemotron 3 Super 120B",
                 role="text",
                 description="Equilibrio entre calidad y razonamiento.",
