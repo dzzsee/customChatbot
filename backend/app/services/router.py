@@ -96,6 +96,12 @@ class ModelRouter:
         return [
             ModelInfo(
                 id=self.settings.model_text_default,
+                label="Nemotron Nano 30B",
+                role="text",
+                description="Respuesta rapida para preguntas cortas y tareas diarias.",
+            ),
+            ModelInfo(
+                id=self.settings.model_text_deepseek,
                 label="DeepSeek V4.1 Flash",
                 role="text",
                 description="Respuesta muy rapida para preguntas cortas y tareas diarias.",

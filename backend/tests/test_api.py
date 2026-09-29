@@ -21,7 +21,14 @@ class TestHealthAndModels:
     def test_models_exposes_text_models(self, client) -> None:
         body = client.get("/api/models").json()
         assert body["default"] == get_settings().model_text_default
-        assert [m["role"] for m in body["models"]] == ["text", "text", "text", "text", "omni"]
+        assert [m["role"] for m in body["models"]] == [
+            "text",
+            "text",
+            "text",
+            "text",
+            "text",
+            "omni",
+        ]
 
     def test_openapi_documents_every_route(self, client) -> None:
         paths = client.get("/openapi.json").json()["paths"]
