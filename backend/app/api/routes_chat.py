@@ -92,6 +92,10 @@ async def stream_chat(request: Request, body: ChatRequest) -> AsyncIterator[str]
     if attachments and not any(part.get("type") in {"image_url", "video_url"} for part in inline_parts):
         spec.model = ctx.settings.model_omni
 
+    candidates = [spec]
+    if spec.model == settings.model_text_default and settings.model_text_lightning != spec.model:
+        candidates.append(ctx.router.text(settings.model_text_lightning, reasoning=False))
+
     yield sse("meta", {"model": spec.model, "attachments": len(attachments), "rag_hits": len(rag_blocks)})
 
     system_prompt = chat_system_prompt(settings.ui_language, context_blocks)
@@ -112,26 +116,39 @@ async def stream_chat(request: Request, body: ChatRequest) -> AsyncIterator[str]
 
     reasoning_text: list[str] = []
     content_text: list[str] = []
-    try:
-        async for event in ctx.client.chat_stream(
-            spec.model,
-            messages,
-            max_tokens=spec.max_tokens,
-            temperature=spec.temperature,
-            top_p=spec.top_p,
-            top_k=spec.top_k,
-            thinking=spec.thinking,
-        ):
-            if event["type"] == "reasoning":
-                reasoning_text.append(event["delta"])
-                yield sse("reasoning", {"delta": event["delta"]})
-            elif event["type"] == "delta":
-                content_text.append(event["delta"])
-                yield sse("delta", {"delta": event["delta"]})
-    except NvidiaError as exc:
-        logger.warning("Fallo de streaming: %s", exc)
-        yield sse("error", {"message": f"NVIDIA rechazo la peticion: {exc}"})
-        return
+    for index, candidate in enumerate(candidates):
+        try:
+            async for event in ctx.client.chat_stream(
+                candidate.model,
+                messages,
+                max_tokens=candidate.max_tokens,
+                temperature=candidate.temperature,
+                top_p=candidate.top_p,
+                top_k=candidate.top_k,
+                thinking=candidate.thinking,
+            ):
+                if event["type"] == "reasoning":
+                    reasoning_text.append(event["delta"])
+                    yield sse("reasoning", {"delta": event["delta"]})
+                elif event["type"] == "delta":
+                    content_text.append(event["delta"])
+                    yield sse("delta", {"delta": event["delta"]})
+            if index > 0:
+                yield sse("meta", {"model": candidate.model})
+            break
+        except NvidiaError as exc:
+            can_fallback = (
+                index + 1 < len(candidates)
+                and not content_text
+                and not reasoning_text
+                and "404" in str(exc)
+            )
+            if can_fallback:
+                logger.warning("Modelo %s no disponible; usando %s", candidate.model, candidates[index + 1].model)
+                continue
+            logger.warning("Fallo de streaming: %s", exc)
+            yield sse("error", {"message": f"NVIDIA rechazo la peticion: {exc}"})
+            return
 
     answer = "".join(content_text)
 
